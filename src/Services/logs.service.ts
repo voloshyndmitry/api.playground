@@ -35,8 +35,11 @@ export class LogsService {
 
   async findAll(user: { sub: string }): Promise<LogDataClass[]> {
     const currentUser = await this.usersService.findOne(user?.sub);
+    if(!currentUser?.userId) {
+      return[];
+    }
     const Logs = await this.LogsModel.find({
-      userId: currentUser.userId,
+      userId: currentUser?.userId,
     }).exec();
 
     return Logs.map((Log) => {
